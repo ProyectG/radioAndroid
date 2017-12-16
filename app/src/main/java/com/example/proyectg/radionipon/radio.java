@@ -125,24 +125,18 @@ public class radio extends AppCompatActivity {
             {
                 rootView = inflater.inflate(R.layout.fragment_radio, container, false);
                 WebView radio = rootView.findViewById(R.id.radioweb);
-                radio.setVisibility(View.VISIBLE);
+                radio.setVisibility(View.INVISIBLE);
                 radio.setWebViewClient(new WebViewClient()
                 {
-                    public void onProgressChanged(WebView view, int progress)
-                    {
-                        ProgressBar barra = (ProgressBar) getActivity().findViewById(R.id.radioweb);
-                        barra.setProgress(progress*100);
-                        Log.i("[[CACA]]",String.valueOf(progress));
-                        if(progress == 100) {
-                            barra.setVisibility(View.INVISIBLE);
-                        }
-                        else
-                        {
-                            barra.setVisibility(View.INVISIBLE);
-                        }
-
-
+                    public void onPageFinished(WebView view, String url) {
+                        // do your stuff here
+                        ProgressBar barra = view.findViewById(R.id.progressBar);
+                        WebView ra = view.findViewById(R.id.radioweb);
+                        barra.setVisibility(View.INVISIBLE);
+                        ra.setVisibility(View.VISIBLE);
                     }
+
+
                 });
                 configuracion = radio.getSettings();
                 configuracion.setJavaScriptEnabled(true);
