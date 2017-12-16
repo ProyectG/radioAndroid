@@ -1,5 +1,6 @@
 package com.example.proyectg.radionipon;
 
+import android.app.Activity;
 import android.support.design.widget.TabLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -21,6 +22,7 @@ import android.view.ViewGroup;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 public class radio extends AppCompatActivity {
@@ -114,7 +116,7 @@ public class radio extends AppCompatActivity {
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
-            //Seteo el root
+
             WebSettings configuracion;
             View rootView = null;
             Log.i("[[SECTION NUMBER]]",String.valueOf(getArguments().getInt(ARG_SECTION_NUMBER)));
@@ -124,7 +126,24 @@ public class radio extends AppCompatActivity {
                 rootView = inflater.inflate(R.layout.fragment_radio, container, false);
                 WebView radio = rootView.findViewById(R.id.radioweb);
                 radio.setVisibility(View.VISIBLE);
-                radio.setWebViewClient(new WebViewClient());
+                radio.setWebViewClient(new WebViewClient()
+                {
+                    public void onProgressChanged(WebView view, int progress)
+                    {
+                        ProgressBar barra = (ProgressBar) getActivity().findViewById(R.id.radioweb);
+                        barra.setProgress(progress*100);
+                        Log.i("[[CACA]]",String.valueOf(progress));
+                        if(progress == 100) {
+                            barra.setVisibility(View.INVISIBLE);
+                        }
+                        else
+                        {
+                            barra.setVisibility(View.INVISIBLE);
+                        }
+
+
+                    }
+                });
                 configuracion = radio.getSettings();
                 configuracion.setJavaScriptEnabled(true);
                 radio.loadUrl("http://radio.niponanimeproject.com");
@@ -149,12 +168,6 @@ public class radio extends AppCompatActivity {
                 configuracion.setJavaScriptEnabled(true);
                 reglas.loadUrl("https://niponanimeproject.com/#reglas");
             }
-
-
-                //rootView = inflater.inflate(R.layout.fragment_radio, container, false);
-                //TextView textView = (TextView) rootView.findViewById(R.id.section_label);
-                //textView.setText(getString(R.string.section_format, getArguments().getInt(ARG_SECTION_NUMBER)));
-                //textView.setText(getString(R.string.section_format, getArguments().getInt(ARG_SECTION_NUMBER)));
 
 
             return rootView;
