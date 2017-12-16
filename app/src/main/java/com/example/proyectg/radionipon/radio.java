@@ -11,12 +11,16 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import android.webkit.WebSettings;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.TextView;
 
 public class radio extends AppCompatActivity {
@@ -41,29 +45,21 @@ public class radio extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_radio);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        //Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        //setSupportActionBar(toolbar);
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
 
         // Set up the ViewPager with the sections adapter.
-        mViewPager = (ViewPager) findViewById(R.id.container);
+        mViewPager =  findViewById(R.id.container);
         mViewPager.setAdapter(mSectionsPagerAdapter);
 
-        TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
+        TabLayout tabLayout =  findViewById(R.id.tabs);
 
         mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
         tabLayout.addOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(mViewPager));
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
 
     }
 
@@ -119,11 +115,47 @@ public class radio extends AppCompatActivity {
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
             //Seteo el root
-                View rootView = null;
-
+            WebSettings configuracion;
+            View rootView = null;
+            Log.i("[[SECTION NUMBER]]",String.valueOf(getArguments().getInt(ARG_SECTION_NUMBER)));
+            int numero = getArguments().getInt(ARG_SECTION_NUMBER);
+            if(numero == 1)
+            {
                 rootView = inflater.inflate(R.layout.fragment_radio, container, false);
-                TextView textView = (TextView) rootView.findViewById(R.id.section_label);
-                textView.setText(getString(R.string.section_format, getArguments().getInt(ARG_SECTION_NUMBER)));
+                WebView radio = rootView.findViewById(R.id.radioweb);
+                radio.setVisibility(View.VISIBLE);
+                radio.setWebViewClient(new WebViewClient());
+                configuracion = radio.getSettings();
+                configuracion.setJavaScriptEnabled(true);
+                radio.loadUrl("http://radio.niponanimeproject.com");
+            }
+            else if (numero == 2)
+            {
+                rootView = inflater.inflate(R.layout.fragment_chat, container, false);
+                WebView chat =  rootView.findViewById(R.id.chatweb);
+                chat.setVisibility(View.VISIBLE);
+                chat.setWebViewClient(new WebViewClient());
+                configuracion = chat.getSettings();
+                configuracion.setJavaScriptEnabled(true);
+                chat.loadUrl("https://niponanimeproject.com/chat");
+            }
+            else if (numero == 3)
+            {
+                rootView = inflater.inflate(R.layout.fragment_reglas, container, false);
+                WebView reglas =  rootView.findViewById(R.id.reglasweb);
+                reglas.setVisibility(View.VISIBLE);
+                reglas.setWebViewClient(new WebViewClient());
+                configuracion = reglas.getSettings();
+                configuracion.setJavaScriptEnabled(true);
+                reglas.loadUrl("https://niponanimeproject.com/#reglas");
+            }
+
+
+                //rootView = inflater.inflate(R.layout.fragment_radio, container, false);
+                //TextView textView = (TextView) rootView.findViewById(R.id.section_label);
+                //textView.setText(getString(R.string.section_format, getArguments().getInt(ARG_SECTION_NUMBER)));
+                //textView.setText(getString(R.string.section_format, getArguments().getInt(ARG_SECTION_NUMBER)));
+
 
             return rootView;
         }
@@ -135,7 +167,7 @@ public class radio extends AppCompatActivity {
      */
     public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
-        public SectionsPagerAdapter(FragmentManager fm) {
+        SectionsPagerAdapter(FragmentManager fm) {
             super(fm);
         }
 
